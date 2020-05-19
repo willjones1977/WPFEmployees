@@ -1,0 +1,150 @@
+﻿<Window x:Class="GroverEmployees.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GroverEmployees"
+        mc:Ignorable="d"
+        Title="Grover Employees" Height="600" Width="800" Loaded="Window_Loaded">
+    
+    <Window.Background>
+        <ImageBrush ImageSource="C:/Users/wjone/source/repos/GroverEmployees/GroverLogo.png" Stretch="Fill" />
+    </Window.Background>
+    
+    <Window.Resources>
+        <Style x:Key="Label" TargetType="{x:Type Label}" BasedOn="{x:Null}">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Height" Value="23"/>
+        </Style>
+        <Style x:Key="EmployeeTextBox" TargetType="{x:Type TextBox}" BasedOn="{x:Null}">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="3"/>
+            <Setter Property="Height" Value="26"/>
+            <Setter Property="Width" Value="120"/>
+        </Style>
+        <Style x:Key="NavButton" TargetType="{x:Type Button}" BasedOn="{x:Null}">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontFamily" Value="Segoe UI Symbol"/>
+            <Setter Property="Margin" Value="2,2,2,0"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="auto"/>
+        </Style>
+        <CollectionViewSource x:Key="employeeViewSource" d:DesignSource="{d:DesignInstance {x:Type local:Employee}, CreateList=True}"/>
+        <RoutedUICommand x:Key="FirstCommand" Text="First"/>
+        <RoutedUICommand x:Key="LastCommand" Text="Last"/>
+        <RoutedUICommand x:Key="NextCommand" Text="Next"/>
+        <RoutedUICommand x:Key="PreviousCommand" Text="Previous"/>
+        <RoutedUICommand x:Key="DeleteEmployeeCommand" Text="Delete Employee"/>
+        <RoutedUICommand x:Key="DeleteOrderCommand" Text="Delete Order"/>
+        <RoutedUICommand x:Key="UpdateCommand" Text="Update"/>
+        <RoutedUICommand x:Key="AddCommand" Text="Add"/>
+        <RoutedUICommand x:Key="CancelCommand" Text="Cancel"/>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource FirstCommand}" Executed="FirstCommandHandler"/>
+        <CommandBinding Command="{StaticResource LastCommand}" Executed="LastCommandHandler"/>
+        <CommandBinding Command="{StaticResource NextCommand}" Executed="NextCommandHandler"/>
+        <CommandBinding Command="{StaticResource PreviousCommand}" Executed="PreviousCommandHandler"/>
+        <CommandBinding Command="{StaticResource DeleteEmployeeCommand}" Executed="DeleteEmployeeCommandHandler"/>
+        <CommandBinding Command="{StaticResource UpdateCommand}" Executed="UpdateCommandHandler"/>
+        <CommandBinding Command="{StaticResource AddCommand}" Executed="AddCommandHandler"/>
+        <CommandBinding Command="{StaticResource CancelCommand}" Executed="CancelCommandHandler"/>
+    </Window.CommandBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="2,2,2,0" Height="36" VerticalAlignment="Top" Background="Black" DataContext="{StaticResource employeeViewSource}">
+            <Button Name="btnFirst" Content="|◄" Command="{StaticResource FirstCommand}" Style="{StaticResource NavButton}"/>
+            <Button Name="btnPrev" Content="◄" Command="{StaticResource PreviousCommand}" Style="{StaticResource NavButton}"/>
+            <Button Name="btnNext" Content="►" Command="{StaticResource NextCommand}" Style="{StaticResource NavButton}"/>
+            <Button Name="btnLast" Content="►|" Command="{StaticResource LastCommand}" Style="{StaticResource NavButton}"/>
+            <Button Name="btnDelete" Content="Delete Employee" Command="{StaticResource DeleteEmployeeCommand}" FontSize="11" Width="120" Style="{StaticResource NavButton}"/>
+            <Button Name="btnAdd" Content="New Employee" Command="{StaticResource AddCommand}" FontSize="11" Width="80" Style="{StaticResource NavButton}"/>
+            <Button Name="btnUpdate" Content="Commit" Command="{StaticResource UpdateCommand}" FontSize="11" Width="80" Style="{StaticResource NavButton}"/>
+            <Button Content="Cancel" Name="btnCancel" Command="{StaticResource CancelCommand}" FontSize="11" Width="80" Style="{StaticResource NavButton}"/>
+        </StackPanel>
+        <!-- Existing Employee -->
+        <Grid x:Name="existingEmployeeGrid" Grid.Row="1" HorizontalAlignment="Left" Margin="42,33,0,0" Visibility="Visible" VerticalAlignment="Top" Background="Black"  DataContext="{StaticResource employeeViewSource}" Width="247" Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="233"/>
+                <ColumnDefinition Width="Auto" MinWidth="397"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+
+            </Grid.RowDefinitions>
+            <!-- <Label Content="ID:" Grid.Row="0" Style="{StaticResource Label}"/> -->
+            <TextBox x:Name="employeeIDTextBox" Grid.Row="0" Style="{StaticResource EmployeeTextBox}"
+                  Text="{Binding EmployeeID, Mode=OneWay, NotifyOnTargetUpdated=True, NotifyOnValidationError=false}" Margin="0,13,3,25" Visibility="Collapsed" Grid.RowSpan="2"/>
+
+            <Label Content="First Name:" Grid.Row="1" Style="{StaticResource Label}" Foreground="#FFF"/>
+            <TextBox x:Name="employeeFirstNameTextBox" Grid.Row="1" Style="{StaticResource EmployeeTextBox}"
+                  Text="{Binding FirstName, Mode=TwoWay, NotifyOnTargetUpdated=True, NotifyOnValidationError=true, ValidatesOnExceptions=true}" />
+
+            <Label Content="Last Name:" Grid.Row="2" Style="{StaticResource Label}" Foreground="#FFF"/>
+            <TextBox x:Name="employeeLastNameTextBox" Grid.Row="2" Style="{StaticResource EmployeeTextBox}"
+                  Text="{Binding LastName, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+
+
+            <Label Content="Title:" Grid.Row="3" Style="{StaticResource Label}" Foreground="#FFF"/>
+            <TextBox x:Name="employeeTitleTextBox" Grid.Row="3" Style="{StaticResource EmployeeTextBox}"
+                  Text="{Binding Title, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+            
+        </Grid>
+        <!-- Update Indicator -->
+        <Grid x:Name="udpateGrid" Grid.Row="1" HorizontalAlignment="Left" Margin="42,133,0,0" Visibility="Visible" VerticalAlignment="Top" DataContext="{StaticResource employeeViewSource}" Width="247" Grid.RowSpan="2" Background="Black">
+            <Label x:Name="updateIndicator" Content="" Grid.Row="4" Style="{StaticResource Label}" Height="30" Visibility="Collapsed" Foreground="#FFF"/>
+        </Grid>
+        <!-- New Employee -->
+        <Grid x:Name="newEmployeeGrid" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="42,33,0,0" DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=newEmployee, UpdateSourceTrigger=Explicit}" Visibility="Collapsed" Background="CornflowerBlue" Width="247" Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" MinWidth="233"/>
+                <ColumnDefinition Width="Auto" MinWidth="397"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Content="First Name:" Grid.Row="1" Style="{StaticResource Label}"/>
+            <TextBox x:Name="add_employeeFirstNameTextBox" Grid.Row="1" Style="{StaticResource EmployeeTextBox}"
+                  Text="{Binding CompanyName, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true }"/>
+            <Label Content="Last Name:" Grid.Row="2" Style="{StaticResource Label}"/>
+            <TextBox x:Name="add_employeeLastNameTextBox" Grid.Row="2" Style="{StaticResource EmployeeTextBox}"
+                  Text="{Binding CompanyName, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true }"/>
+
+            <Label Content="Title:" Grid.Row="3" Style="{StaticResource Label}"/>
+            <TextBox x:Name="add_employeeTitleTextBox" Grid.Row="3" Style="{StaticResource EmployeeTextBox}"
+                  Text="{Binding ContactTitle, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true}"/>
+        </Grid>
+        <!-- Employee List -->
+        <DataGrid x:Name="employeesDataGrid" SelectionUnit="Cell" SelectionMode="Single" AutoGenerateColumns="False" CanUserAddRows="false" IsEnabled="True" EnableRowVirtualization="True" Width="auto" ItemsSource="{Binding Source={StaticResource employeeViewSource}}" Margin="42,197,357,0" Grid.Row="2" RowDetailsVisibilityMode="VisibleWhenSelected" Height="300" VerticalAlignment="Top" Background="Black">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Delete" Command="{StaticResource DeleteEmployeeCommand}" CommandParameter="{Binding}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn x:Name="employeeIDColumn" Binding="{Binding EmployeeID}" Header="ID"/>
+                <DataGridTextColumn x:Name="employeeFirstNameColumn" Binding="{Binding FirstName}" Header="First Name"/>
+                <DataGridTextColumn x:Name="employeeLastNameColumn" Binding="{Binding LastName}" Header="Last Name"/>
+                    <DataGridTextColumn x:Name="employeeTitleColumn" Binding="{Binding Title}" Header="Title"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>
